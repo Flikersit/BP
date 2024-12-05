@@ -145,11 +145,11 @@ def reshape_mask(mask, num_clases=8, depth=272):
     for z in range(depth):  #iteration over 'z' axis 
         for y in range(512):    #iteration over 'y' axis
             for x in range(512):    #iteration over 'x' axis
-                if mask[z,x,y] != 0:
-
-                    value = mask[x,y]
-                    trida = value/25
-                    new_mask[trida, z, x, y] = 1
+                value = mask[z, x, y]
+                trida = value/25
+                if trida==10:
+                    trida=8
+                new_mask[trida, z, x, y] = 1
 
     return new_mask
 
