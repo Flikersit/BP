@@ -13,15 +13,17 @@ class DoubleConv(nn.Module):
         if downsample:
             self.conv1 = nn.Conv3d(in_channels=in_channels, out_channels=in_channels, kernel_size=3, stride=1, padding=1)
             self.conv2 = nn.Conv3d(in_channels=in_channels, out_channels=in_channels*2, kernel_size=3, stride=1, padding=1)
+            self.batch_norm1 = nn.BatchNorm3d(in_channels)
+            self.batch_norm2 = nn.BatchNorm3d(in_channels*2)
         else:
             self.conv1 = nn.Conv3d(in_channels=(in_channels + in_channels//2), out_channels=in_channels//2, kernel_size=3, stride=1, padding=1)
             self.conv2 = nn.Conv3d(in_channels=in_channels//2, out_channels=in_channels//2, kernel_size=3, stride=1, padding=1)
+            self.batch_norm1 = nn.BatchNorm3d(in_channels//2)
+            self.batch_norm2 = nn.BatchNorm3d(in_channels//2)
 
         self.relu1 = nn.ReLU()
         self.relu2 = nn.ReLU()
 
-        self.batch_norm1 = nn.BatchNorm3d(in_channels)
-        self.batch_norm2 = nn.BatchNorm3d(in_channels*2)
 
     def forward(self, x):
         x = self.conv1(x)
@@ -33,6 +35,7 @@ class DoubleConv(nn.Module):
         x = self.relu2(x)
 
         return x
+    
     
 class UNet3D(nn.Module):
     def __init__(self, in_channels = 1, out_channels=8, *args, **kwargs):
